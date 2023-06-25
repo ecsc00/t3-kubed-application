@@ -1,0 +1,80 @@
+version: 2.1
+orbs:
+  aws-ecr: circleci/aws-ecr@8.2.1
+  kubernetes: circleci/kubernetes@1.3.1
+  aws-eks: circleci/aws-eks@2.2.0
+
+jobs:
+  build-and-deploy-backend:
+    working_directory: ~/backend-app
+    docker:
+      - image: cimg/aws:2023.05
+    steps:
+      - checkout
+      - setup_remote_docker
+      - aws-ecr/build-and-push-image:
+          repo: ${AWS_ECR_REPO_NAME}
+          path: "backend-app"
+          build-path: "backend-app"
+          tag: backend-app
+          public-registry-alias: ${AWS_ECR_PUBLIC_ALIAS}
+          public-registry: true
+          skip-when-tags-exist: false
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: "ce-cluster-t3-kubed"
+          install-kubectl: true
+          verbose: true
+      - run:
+          command: kubectl delete service backend-app-service --ignore-not-found=true
+          name: Delete Serivce          
+      - run:
+          command: kubectl delete deployment backend-app --ignore-not-found=true
+          name: Delete Deplyment          
+      - kubernetes/create-or-update-resource:
+          resource-file-path: "backend-app/deployment.yaml"
+          resource-name: backend-app
+      - kubernetes/create-or-update-resource:
+          resource-file-path: "backend-app/service.yaml"
+          resource-name: backend-app-service
+
+  build-and-deploy-frontend:
+    working_directory: ~/frontend-app
+    docker:
+      - image: cimg/aws:2023.05
+    steps:
+      - checkout
+      - setup_remote_docker
+      - aws-ecr/build-and-push-image:
+          repo: ${AWS_ECR_REPO_NAME}
+          path: "frontend-app"
+          build-path: "frontend-app"
+          tag: frontend-app
+          public-registry-alias: ${AWS_ECR_PUBLIC_ALIAS}
+          public-registry: true
+          skip-when-tags-exist: false
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: "ce-cluster-t3-kubed"
+          install-kubectl: true
+          verbose: true
+      - run:
+          command: kubectl delete service frontend-app-service --ignore-not-found=true
+          name: Delete Serivce          
+      - run:
+          command: kubectl delete deployment frontend-app --ignore-not-found=true
+          name: Delete Deplyment   
+      - kubernetes/create-or-update-resource:
+          resource-file-path: "frontend-app/deployment.yaml"
+          resource-name: frontend-app
+      - kubernetes/create-or-update-resource:
+          resource-file-path: "frontend-app/service.yaml"
+          resource-name: frontend-app-service     
+      - run:
+          command: kubectl describe services backend-app-service
+          name: get service url
+    
+workflows:
+  application-build-and-deploy:
+    jobs:
+      - build-and-deploy-backend
+      - build-and-deploy-frontend
+      
