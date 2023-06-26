@@ -60,4 +60,4 @@ Once the pipeline gets completed the service url will be displayed in the EKS ->
 
 We can use this url to launch the application.
 
-The same url need to be passed as the environment variable to run the https://github.com/t3-kubed/t3-kubed-automationtesting automation testing pipeline.
+The same url need to be passed as the environment variable to run the https://github.com/t3-kubed/t3-kubed-automationtesting automation testing pipeline. The Automation test will cover the customer creation and validation.
