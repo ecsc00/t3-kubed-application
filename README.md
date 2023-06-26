@@ -1,12 +1,12 @@
 Tools used:
-1.Trello - Project board 
-2.CircleCi - CICD pipeline
-3.Github - Repository for maintaining the code
-4.Cloud - AWS
-5.Containarization - Docker
-6.Cluster - Kubernetes
-7.Infrastructure as code - Terraform
-8.Automation Testing - Cypress
+1. Trello - Project board 
+2. CircleCi - CICD pipeline
+3. Github - Repository for maintaining the code
+4. Cloud - AWS
+5. Containarization - Docker
+6. Cluster - Kubernetes
+7. Infrastructure as code - Terraform
+8. Automation Testing - Cypress
 
 The t3-kubed-infrastructure https://github.com/t3-kubed/t3-kubed-infrastructure contains the terraform files for spinning up the AWS infrastructure 
 This will be executed as the pipeline in the CircleCI and the infrastructure will be created once the pipeline get completed.
