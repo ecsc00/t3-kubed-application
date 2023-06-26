@@ -8,6 +8,9 @@ Tools used:
 7. Infrastructure as code - Terraform
 8. Automation Testing - Cypress
 
+We used the following ***Environment Variables*** to allow our CircleCI user to connet to AWS
+![](./Environment-Variables.jpg "")
+
 The t3-kubed-infrastructure https://github.com/t3-kubed/t3-kubed-infrastructure contains the terraform files for spinning up the AWS infrastructure 
 This will be executed as the pipeline in the CircleCI and the infrastructure will be created once the pipeline get completed.
 The resources created as part of the infrastructure pipeline:
